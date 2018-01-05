@@ -1,5 +1,13 @@
 import ast
 
+__version__ = '1.0.0'
+__all__ = [
+    'VMTSafeEval',
+    'evaluate',
+    'cpu_cast',
+    'mem_cast',
+    'unit_cast'
+]
 
 INVALID_FUNC = (
   'callable',
@@ -63,10 +71,6 @@ def evaluate(exp, local_map={}):
 
     Returns:
         Expression result.
-
-
-    Example:
-        ``evaluate(exp='getnum() < 5', local_map=('getnum': random.random)`` returns True if getnum() is less than 5, else False.
     """
     tree = VMTSafeEval().visit(ast.parse(exp, mode='eval'))
     ast.fix_missing_locations(tree)
@@ -98,7 +102,7 @@ def unit_cast(value, ufrom, uto, factor, unit_list):
 
 
 def mem_cast(value, unit='GB', factor=1024, src_unit='KB'):
-    """Converts memory values using the binary (1024) system of units.
+    """Converts values using the binary (1024) system of units.
 
     ``mem_cast`` is a wrapper for ``unit_cast`` and supports memory sizes from
     Bytes (B) to Yottabytes (YB). Source values are expected to be supplied as
@@ -125,7 +129,7 @@ def mem_cast(value, unit='GB', factor=1024, src_unit='KB'):
 
 
 def cpu_cast(value, unit='GHZ', factor=1000, src_unit='MZH'):
-    """Converts memory values using the SI (1000) system of units.
+    """Converts values using the SI (1000) system of units.
 
     ``cpu_cast`` is a wrapper for ``unit_cast`` and supports cpu speeds from
     Hertz (HZ) to Petahertz (PHZ). Source values are expected to be supplied as
