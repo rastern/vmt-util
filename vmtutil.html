@@ -1,0 +1,226 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>vmtutil — Developer Interfaces &#8212; vmt-util 1.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Quickstart Guide" href="quickstart.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-vmtutil">
+<span id="vmtutil-developer-interfaces"></span><h1><a class="reference internal" href="#module-vmtutil" title="vmtutil"><code class="xref py py-mod docutils literal"><span class="pre">vmtutil</span></code></a> — Developer Interfaces<a class="headerlink" href="#module-vmtutil" title="Permalink to this headline">¶</a></h1>
+<p>vmt-util provides additional functions when working with the Turbonomic API.</p>
+<div class="section" id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="vmtutil.VMTSafeEval">
+<em class="property">class </em><code class="descclassname">vmtutil.</code><code class="descname">VMTSafeEval</code><a class="headerlink" href="#vmtutil.VMTSafeEval" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for <a class="reference external" href="https://docs.python.org/2/library/ast.html#ast.NodeTransformer" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">ast.NodeTransformer</span></code></a>.</p>
+<p><a class="reference internal" href="#vmtutil.VMTSafeEval" title="vmtutil.VMTSafeEval"><code class="xref py py-class docutils literal"><span class="pre">VMTSafeEval</span></code></a> provides extension to <a class="reference external" href="https://docs.python.org/2/library/ast.html#ast.NodeTransformer" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">ast.NodeTransformer</span></code></a> for
+the purpose of parsing custom domain specific languages required in client
+configurations. In practice this class should not be used directly.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://docs.python.org/2/library/ast.html#ast.NodeTransformer" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">ast.NodeTransformer</span></code></a>.</p>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="vmtutil.evaluate">
+<code class="descclassname">vmtutil.</code><code class="descname">evaluate</code><span class="sig-paren">(</span><em>exp</em>, <em>local_map={}</em><span class="sig-paren">)</span><a class="headerlink" href="#vmtutil.evaluate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluates the expression <code class="docutils literal"><span class="pre">exp</span></code> and returns the results.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>exp</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – Domain specific language expression to be evaluated.</li>
+<li><strong>local_map</strong> (<a class="reference external" href="https://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)"><em>dict</em></a>) – Dictionary of local function and variable mappings as
+available to the DSL.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Expression result.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="vmtutil.cpu_cast">
+<code class="descclassname">vmtutil.</code><code class="descname">cpu_cast</code><span class="sig-paren">(</span><em>value</em>, <em>unit='GHZ'</em>, <em>factor=1000</em>, <em>src_unit='MZH'</em><span class="sig-paren">)</span><a class="headerlink" href="#vmtutil.cpu_cast" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts values using the SI (1000) system of units.</p>
+<p><code class="docutils literal"><span class="pre">cpu_cast</span></code> is a wrapper for <code class="docutils literal"><span class="pre">unit_cast</span></code> and supports cpu speeds from
+Hertz (HZ) to Petahertz (PHZ). Source values are expected to be supplied as
+raw values from Turbonomic, which dfaults to MHZ. This behavior may be
+overridden using the <code class="docutils literal"><span class="pre">src_unit</span></code> argument.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>value</strong> – Base cpu unit value to convert.</li>
+<li><strong>unit</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a><em>, </em><em>optional</em>) – Destination unit to convert to (default: GHZ)</li>
+<li><strong>factor</strong> (<em>optional</em>) – Memory unit factor (default: 1024)</li>
+<li><strong>src_unit</strong> (<em>opitonal</em>) – Source unit to convert from (default: MHZ)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Converted unit value.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="vmtutil.mem_cast">
+<code class="descclassname">vmtutil.</code><code class="descname">mem_cast</code><span class="sig-paren">(</span><em>value</em>, <em>unit='GB'</em>, <em>factor=1024</em>, <em>src_unit='KB'</em><span class="sig-paren">)</span><a class="headerlink" href="#vmtutil.mem_cast" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts values using the binary (1024) system of units.</p>
+<p><code class="docutils literal"><span class="pre">mem_cast</span></code> is a wrapper for <code class="docutils literal"><span class="pre">unit_cast</span></code> and supports memory sizes from
+Bytes (B) to Yottabytes (YB). Source values are expected to be supplied as
+raw values from Turbonomic, which defaults to KB. This behavior may be
+overridden using the <code class="docutils literal"><span class="pre">src_unit</span></code> argument.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>value</strong> – Base memory unit value to convert.</li>
+<li><strong>unit</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a><em>, </em><em>optional</em>) – Destination unit to convert to (default: GB)</li>
+<li><strong>factor</strong> (<em>optional</em>) – Memory unit factor (default: 1024)</li>
+<li><strong>src_unit</strong> (<em>optional</em>) – Source unit to convert from (default: KB)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Converted unit value.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>This function may also be used for converting storage values. However,
+note that Turbonomic defaults to MB for storage values, instead of KB
+as it does with memory. <code class="docutils literal"><span class="pre">src_unit</span></code> must therefore be overridden to ‘MB’.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="vmtutil.unit_cast">
+<code class="descclassname">vmtutil.</code><code class="descname">unit_cast</code><span class="sig-paren">(</span><em>value</em>, <em>ufrom</em>, <em>uto</em>, <em>factor</em>, <em>unit_list</em><span class="sig-paren">)</span><a class="headerlink" href="#vmtutil.unit_cast" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generic unit conversion utility function.</p>
+<p>Unit conversions must utilize a scale relative to a constant factor, such as
+the metric system, or base 2 numbering used in computing.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>value</strong> – Unit value to be converted</li>
+<li><strong>ufrom</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – Scale unit converting from.</li>
+<li><strong>uto</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – Scale unit converting to.</li>
+<li><strong>factor</strong> – Scale factor to use in calculating the change.</li>
+<li><strong>unit_list</strong> (<em>list</em>) – The scale unit labels.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Converted unit value.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart Guide</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#"><code class="docutils literal"><span class="pre">vmtutil</span></code> — Developer Interfaces</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#classes">Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#functions">Functions</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="quickstart.html" title="previous chapter">Quickstart Guide</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, R.A. Stern.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/vmtutil.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

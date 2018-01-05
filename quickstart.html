@@ -1,0 +1,186 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Quickstart Guide &#8212; vmt-util 1.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="vmtutil — Developer Interfaces" href="vmtutil.html" />
+    <link rel="prev" title="Installation" href="install.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="quickstart-guide">
+<h1>Quickstart Guide<a class="headerlink" href="#quickstart-guide" title="Permalink to this headline">¶</a></h1>
+<p>vmt-util provides utility functions and classes for <a class="reference external" href="https://github.com/rastern/vmt-connect/">vmt-connect</a>, and does not
+itself provide any direct API methods or calls. The most useful functions will
+likely be <code class="docutils literal"><span class="pre">evaluate</span></code>, and <code class="docutils literal"><span class="pre">unit_cast</span></code> which has two pre-built wrappers:
+<code class="docutils literal"><span class="pre">mem_cast</span></code> and <code class="docutils literal"><span class="pre">cpu_cast</span></code>.</p>
+<div class="section" id="unit-conversions">
+<h2>Unit Conversions<a class="headerlink" href="#unit-conversions" title="Permalink to this headline">¶</a></h2>
+<p>The base conversion utility <code class="docutils literal"><span class="pre">unit_cast</span></code> is a general purpose unit converter
+for scales that have a static conversion factor, such as metric measurements.
+Two convenience wrapper functions are provided to make repetetive conversions
+easier.</p>
+<p>Suppose we have pulled VM statistics and wish to convert the VMem from the reported
+value in KB, to something more useful such as GB for reporting. Assuming we have
+stored our value in a variable called <cite>vm_memory</cite>, we might do like so:</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">mem_cast</span><span class="p">(</span><span class="n">vm_memory</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>And if we wanted it in an alternate unit, such as TB or MB, we could specify
+the destination unit to the cast function.</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="c1"># memory in TB</span>
+<span class="n">mem_cast</span><span class="p">(</span><span class="n">vm_memory</span><span class="p">,</span> <span class="s1">&#39;TB&#39;</span><span class="p">)</span>
+
+<span class="c1"># memory in GB</span>
+<span class="n">mem_cast</span><span class="p">(</span><span class="n">vm_memory</span><span class="p">,</span> <span class="s1">&#39;MB&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Likewise, there is a convenience wrapper for CPU speeds reported in Mhz, which
+defaults to Ghz.</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="c1"># speed in Ghz</span>
+<span class="n">cpu_cast</span><span class="p">(</span><span class="n">cpu_speed</span><span class="p">)</span>
+
+<span class="c1"># speed in Thz</span>
+<span class="n">cpu_cast</span><span class="p">(</span><span class="n">cpu_speed</span><span class="p">,</span> <span class="s1">&#39;THZ&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="expression-parser">
+<h2>Expression Parser<a class="headerlink" href="#expression-parser" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal"><span class="pre">evaluate</span></code> function provides an extensible expression parser which may be
+adapted as needed to create domain specific languages for advanced configurations.
+The base expression syntax is CPython.</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="c1"># basic expression evaluation</span>
+<span class="n">exp</span> <span class="o">=</span> <span class="s1">&#39;1 + 10 / 5&#39;</span>
+<span class="n">evaluate</span><span class="p">(</span><span class="n">exp</span><span class="p">)</span>
+
+<span class="c1"># returns 3</span>
+
+<span class="c1"># this also returns 3</span>
+<span class="n">exp</span> <span class="o">=</span> <span class="s1">&#39;int(5 / 2 + 1.4)&#39;</span>
+<span class="n">evaluate</span><span class="p">(</span><span class="n">exp</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Control flow capabilities are intentionally not present within the base expression
+syntax, though as shown above, functions are, including most safe default Pthon
+functions. Additionally, the parser may be extended with custom functions using
+a mapper dictionary.</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">random</span>
+
+<span class="c1"># our own unique function</span>
+<span class="k">def</span> <span class="nf">number</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">10</span>
+
+<span class="c1"># map our function to the name we want the parser to recognize</span>
+<span class="nb">map</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;get_num&quot;</span><span class="p">:</span> <span class="n">number</span><span class="p">}</span>
+
+<span class="n">exp</span> <span class="o">=</span> <span class="s1">&#39;get_num() &lt; 5&#39;</span>
+<span class="n">evaluate</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="nb">map</span><span class="p">)</span>
+
+<span class="c1"># returns True or False depending on results of get_num() at runtime</span>
+</pre></div>
+</div>
+<p>Multiple logic conditions can be combined, the same as in Python.</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">number</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">10</span>
+
+<span class="k">def</span> <span class="nf">status_check</span><span class="p">():</span>
+    <span class="c1"># produce some conditional response</span>
+    <span class="k">return</span> <span class="kc">True</span>
+
+<span class="nb">map</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;get_num&quot;</span><span class="p">:</span> <span class="n">number</span><span class="p">,</span> <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="n">status_check</span><span class="p">}</span>
+<span class="n">exp</span> <span class="o">=</span> <span class="s1">&#39;(get_num() &lt; 5 and get_num() &gt; 1) or !status()&#39;</span>
+<span class="n">evaluate</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="nb">map</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quickstart Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#unit-conversions">Unit Conversions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#expression-parser">Expression Parser</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="vmtutil.html"><code class="docutils literal"><span class="pre">vmtutil</span></code> — Developer Interfaces</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="install.html" title="previous chapter">Installation</a></li>
+      <li>Next: <a href="vmtutil.html" title="next chapter"><code class="docutils literal"><span class="pre">vmtutil</span></code> — Developer Interfaces</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, R.A. Stern.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/quickstart.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
