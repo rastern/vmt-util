@@ -1,5 +1,13 @@
 import ast
 
+__version__ = '1.0.0.dev'
+__all__ = [
+    'VMTSafeEval',
+    'evaluate',
+    'cpu_cast',
+    'mem_cast',
+    'unit_cast'
+]
 
 INVALID_FUNC = (
   'callable',
