@@ -1,9 +1,9 @@
 .. _installation: https://rastern.github.io/vmt-util/install.html
 .. _vmt-connect: https://rastern.github.io/vmt-connect/
-.. _vmt-planner: https://rastern.github.io/vmt-plan/
+.. _vmt-plan: https://rastern.github.io/vmt-plan/
 
 vmt-util: Turbonomic Utilities
-==============================
+=================================
 
 vmt-util is a single file Python module that is intended to be used in conjunction
 with the `vmt-connect`_ and `vmt-plan`_ modules.
