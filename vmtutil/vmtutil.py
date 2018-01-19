@@ -1,7 +1,7 @@
 import ast
 from decimal import Decimal
 
-__version__ = '1.0.1.dev'
+__version__ = '1.0.1'
 __all__ = [
     'VMTSafeEval',
     'evaluate',
