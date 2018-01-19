@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>vmtutil — Developer Interfaces &#8212; vmt-util 1.0.0 documentation</title>
+    <title>vmtutil — Developer Interfaces &#8212; vmt-util 1.0.1 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.0.0',
+        VERSION:     '1.0.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -84,7 +84,7 @@ available to the DSL.</li>
 
 <dl class="function">
 <dt id="vmtutil.cpu_cast">
-<code class="descclassname">vmtutil.</code><code class="descname">cpu_cast</code><span class="sig-paren">(</span><em>value</em>, <em>unit='GHZ'</em>, <em>factor=1000</em>, <em>src_unit='MZH'</em><span class="sig-paren">)</span><a class="headerlink" href="#vmtutil.cpu_cast" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">vmtutil.</code><code class="descname">cpu_cast</code><span class="sig-paren">(</span><em>value</em>, <em>unit='GHZ'</em>, <em>factor=1000</em>, <em>src_unit='MZH'</em>, <em>precision=False</em><span class="sig-paren">)</span><a class="headerlink" href="#vmtutil.cpu_cast" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts values using the SI (1000) system of units.</p>
 <p><code class="docutils literal"><span class="pre">cpu_cast</span></code> is a wrapper for <code class="docutils literal"><span class="pre">unit_cast</span></code> and supports cpu speeds from
 Hertz (HZ) to Petahertz (PHZ). Source values are expected to be supplied as
@@ -99,6 +99,8 @@ overridden using the <code class="docutils literal"><span class="pre">src_unit</
 <li><strong>unit</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a><em>, </em><em>optional</em>) – Destination unit to convert to (default: GHZ)</li>
 <li><strong>factor</strong> (<em>optional</em>) – Memory unit factor (default: 1024)</li>
 <li><strong>src_unit</strong> (<em>opitonal</em>) – Source unit to convert from (default: MHZ)</li>
+<li><strong>precision</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a><em>, </em><em>optional</em>) – rounding precision. If False no rounding is
+applied. (default: False)</li>
 </ul>
 </td>
 </tr>
@@ -111,7 +113,7 @@ overridden using the <code class="docutils literal"><span class="pre">src_unit</
 
 <dl class="function">
 <dt id="vmtutil.mem_cast">
-<code class="descclassname">vmtutil.</code><code class="descname">mem_cast</code><span class="sig-paren">(</span><em>value</em>, <em>unit='GB'</em>, <em>factor=1024</em>, <em>src_unit='KB'</em><span class="sig-paren">)</span><a class="headerlink" href="#vmtutil.mem_cast" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">vmtutil.</code><code class="descname">mem_cast</code><span class="sig-paren">(</span><em>value</em>, <em>unit='GB'</em>, <em>factor=1024</em>, <em>src_unit='KB'</em>, <em>precision=False</em><span class="sig-paren">)</span><a class="headerlink" href="#vmtutil.mem_cast" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts values using the binary (1024) system of units.</p>
 <p><code class="docutils literal"><span class="pre">mem_cast</span></code> is a wrapper for <code class="docutils literal"><span class="pre">unit_cast</span></code> and supports memory sizes from
 Bytes (B) to Yottabytes (YB). Source values are expected to be supplied as
@@ -126,6 +128,8 @@ overridden using the <code class="docutils literal"><span class="pre">src_unit</
 <li><strong>unit</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a><em>, </em><em>optional</em>) – Destination unit to convert to (default: GB)</li>
 <li><strong>factor</strong> (<em>optional</em>) – Memory unit factor (default: 1024)</li>
 <li><strong>src_unit</strong> (<em>optional</em>) – Source unit to convert from (default: KB)</li>
+<li><strong>precision</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a><em>, </em><em>optional</em>) – rounding precision. If False no rounding is
+applied. (default: False)</li>
 </ul>
 </td>
 </tr>
@@ -134,15 +138,17 @@ overridden using the <code class="docutils literal"><span class="pre">src_unit</
 </tr>
 </tbody>
 </table>
-<p class="rubric">Notes</p>
-<p>This function may also be used for converting storage values. However,
+<div class="admonition-notes admonition">
+<p class="first admonition-title">Notes</p>
+<p class="last">This function may also be used for converting storage values. However,
 note that Turbonomic defaults to MB for storage values, instead of KB
 as it does with memory. <code class="docutils literal"><span class="pre">src_unit</span></code> must therefore be overridden to ‘MB’.</p>
+</div>
 </dd></dl>
 
 <dl class="function">
 <dt id="vmtutil.unit_cast">
-<code class="descclassname">vmtutil.</code><code class="descname">unit_cast</code><span class="sig-paren">(</span><em>value</em>, <em>ufrom</em>, <em>uto</em>, <em>factor</em>, <em>unit_list</em><span class="sig-paren">)</span><a class="headerlink" href="#vmtutil.unit_cast" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">vmtutil.</code><code class="descname">unit_cast</code><span class="sig-paren">(</span><em>value</em>, <em>ufrom</em>, <em>uto</em>, <em>factor</em>, <em>unit_list</em>, <em>precision=False</em><span class="sig-paren">)</span><a class="headerlink" href="#vmtutil.unit_cast" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generic unit conversion utility function.</p>
 <p>Unit conversions must utilize a scale relative to a constant factor, such as
 the metric system, or base 2 numbering used in computing.</p>
@@ -156,6 +162,8 @@ the metric system, or base 2 numbering used in computing.</p>
 <li><strong>uto</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) – Scale unit converting to.</li>
 <li><strong>factor</strong> – Scale factor to use in calculating the change.</li>
 <li><strong>unit_list</strong> (<em>list</em>) – The scale unit labels.</li>
+<li><strong>precision</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a><em>, </em><em>optional</em>) – rounding precision. If False no rounding is
+applied. (default: False)</li>
 </ul>
 </td>
 </tr>
@@ -208,7 +216,7 @@ the metric system, or base 2 numbering used in computing.</p>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2017, R.A. Stern.
+      &copy;2017-2018, R.A. Stern.
       
       |
       Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
