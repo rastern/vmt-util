@@ -1,6 +1,7 @@
 import ast
+from decimal import Decimal
 
-__version__ = '1.0.0'
+__version__ = '1.0.1'
 __all__ = [
     'VMTSafeEval',
     'evaluate',
@@ -55,7 +56,7 @@ class VMTSafeEval(ast.NodeTransformer):
         :class:`ast.NodeTransformer`.
     """
     def visit_Call(self, node):
-        if node.func.id in INVALID_FUNC:
+        if node.func.id.lower() in INVALID_FUNC:
             raise NameError("name '{}' is not defined".format(node.func.id))
 
         return node
@@ -79,7 +80,7 @@ def evaluate(exp, local_map={}):
     return eval(cobj, {}, local_map)
 
 
-def unit_cast(value, ufrom, uto, factor, unit_list):
+def unit_cast(value, ufrom, uto, factor, unit_list, precision=False):
     """Generic unit conversion utility function.
 
     Unit conversions must utilize a scale relative to a constant factor, such as
@@ -91,17 +92,21 @@ def unit_cast(value, ufrom, uto, factor, unit_list):
         uto (str): Scale unit converting to.
         factor: Scale factor to use in calculating the change.
         unit_list (list): The scale unit labels.
+        precision (int, optional): rounding precision. If False no rounding is
+            applied. (default: False)
 
     Returns:
         Converted unit value.
     """
     offset = unit_list.index(uto) - unit_list.index(ufrom)
-    chg = pow(factor, abs(offset))
+    chg = Decimal(pow(factor, abs(offset)))
 
-    return value * chg if offset <= 0 else value * (1/chg)
+    res = value * chg if offset <= 0 else value * (1/chg)
+
+    return round(res, precision) if precision else res
 
 
-def mem_cast(value, unit='GB', factor=1024, src_unit='KB'):
+def mem_cast(value, unit='GB', factor=1024, src_unit='KB', precision=False):
     """Converts values using the binary (1024) system of units.
 
     ``mem_cast`` is a wrapper for ``unit_cast`` and supports memory sizes from
@@ -114,6 +119,8 @@ def mem_cast(value, unit='GB', factor=1024, src_unit='KB'):
          unit (str, optional): Destination unit to convert to (default: GB)
          factor (optional): Memory unit factor (default: 1024)
          src_unit (optional): Source unit to convert from (default: KB)
+         precision (int, optional): rounding precision. If False no rounding is
+            applied. (default: False)
 
     Returns:
         Converted unit value.
@@ -125,10 +132,11 @@ def mem_cast(value, unit='GB', factor=1024, src_unit='KB'):
     """
     units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
 
-    return unit_cast(value, src_unit.upper(), unit.upper(), factor, units)
+    return unit_cast(value, src_unit.upper(), unit.upper(), factor, units,
+                     precision)
 
 
-def cpu_cast(value, unit='GHZ', factor=1000, src_unit='MZH'):
+def cpu_cast(value, unit='GHZ', factor=1000, src_unit='MZH', precision=False):
     """Converts values using the SI (1000) system of units.
 
     ``cpu_cast`` is a wrapper for ``unit_cast`` and supports cpu speeds from
@@ -141,10 +149,13 @@ def cpu_cast(value, unit='GHZ', factor=1000, src_unit='MZH'):
          unit (str, optional): Destination unit to convert to (default: GHZ)
          factor (optional): Memory unit factor (default: 1024)
          src_unit (opitonal): Source unit to convert from (default: MHZ)
+         precision (int, optional): rounding precision. If False no rounding is
+            applied. (default: False)
 
     Returns:
         Converted unit value.
     """
     units = ['HZ', 'MHZ', 'GHZ', 'THZ', 'PHZ']
 
-    return unit_cast(value, src_unit.upper(), unit.upper(), factor, units)
+    return unit_cast(value, src_unit.upper(), unit.upper(), factor, units,
+                     precision)
